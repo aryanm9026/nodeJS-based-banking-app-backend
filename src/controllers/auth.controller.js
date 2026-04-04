@@ -1,6 +1,7 @@
 import userModal from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
-import sendRegistrationEmail from '../services/email.service.js'
+import { sendRegistrationEmail } from '../services/email.service.js'
+import tokenBlackListModel from '../models/blackList.model.js';
 
 /**
  * - User Register Controller
@@ -81,4 +82,30 @@ async function userLoginController(req, res) {
     });
 }
 
-export { userRegisterControlller, userLoginController };
+
+/**
+ * - User Logout Controller
+ * - POST /api/auth/logout
+ */
+async function userLogoutController(req, res) {
+
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+        return res.status(400).json({
+            message: "Bad request, token is missing"
+        });
+    }
+
+    res.clearCookie("token");
+
+    await tokenBlackListModel.create({
+        token: token
+    });
+
+    return res.status(200).json({
+        message: "User logged out successfully"
+    });
+}
+
+export { userRegisterControlller, userLoginController, userLogoutController };
