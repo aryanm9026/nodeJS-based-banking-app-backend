@@ -12,6 +12,12 @@ app.use(express.json()); // middleware - express server cant read data from req.
 
 app.use(cookieParser());
 
+// test route 
+app.get("/", (req, res) => {
+    res.status(200).json({
+        message: "Welcome to the banking system API, We are live and ready to serve you!"
+    });
+});
 
 // use routes
 app.use("/api/auth", authRouter);
