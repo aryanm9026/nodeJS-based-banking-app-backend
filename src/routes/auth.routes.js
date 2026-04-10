@@ -1,16 +1,17 @@
 import express from "express";
 import { userRegisterControlller, userLoginController, userLogoutController } from '../controllers/auth.controller.js';
+import { authRateLimiter } from '../middleware/rateLimiting.middleware.js';
 
 const router = express.Router();
 
 /* POST /api/auth/register */
-router.post("/register", userRegisterControlller);
+router.post("/register", authRateLimiter, userRegisterControlller);
 
 /* POST /api/auth/login */
-router.post("/login", userLoginController);
+router.post("/login", authRateLimiter, userLoginController);
 
 /* POST /api/auth/logout */
-router.post("/logout", userLogoutController);
+router.post("/logout", authRateLimiter, userLogoutController);
 
 
 export default router;
